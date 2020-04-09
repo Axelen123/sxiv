@@ -277,6 +277,7 @@ struct opt {
 	bool fullscreen;
 	bool hide_bar;
 	long embed;
+	float alpha;
 	char *geometry;
 	char *res_name;
 

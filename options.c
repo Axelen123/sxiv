@@ -30,7 +30,7 @@ const opt_t *options = (const opt_t*) &_options;
 
 void print_usage(void)
 {
-	printf("usage: sxiv [-abcfhiopqrtvZ] [-A FRAMERATE] [-e WID] [-G GAMMA] "
+	printf("usage: sxiv [-abcfhiopqrtvZ] [-A FRAMERATE] [-e WID] [-O OPACITY] [-G GAMMA] "
 	       "[-g GEOMETRY] [-N NAME] [-n NUM] [-S DELAY] [-s MODE] [-z ZOOM] "
 	       "FILES...\n");
 }
@@ -43,6 +43,7 @@ void print_version(void)
 void parse_options(int argc, char **argv)
 {
 	int n, opt;
+	float f;
 	char *end, *s;
 	const char *scalemodes = "dfwh";
 
@@ -63,6 +64,7 @@ void parse_options(int argc, char **argv)
 
 	_options.fullscreen = false;
 	_options.embed = 0;
+	_options.alpha = -1;
 	_options.hide_bar = false;
 	_options.geometry = NULL;
 	_options.res_name = NULL;
@@ -72,7 +74,7 @@ void parse_options(int argc, char **argv)
 	_options.clean_cache = false;
 	_options.private_mode = false;
 
-	while ((opt = getopt(argc, argv, "A:abce:fG:g:hin:N:opqrS:s:tvZz:")) != -1) {
+	while ((opt = getopt(argc, argv, "A:abce:O:fG:g:hin:N:opqrS:s:tvZz:")) != -1) {
 		switch (opt) {
 			case '?':
 				print_usage();
@@ -97,6 +99,12 @@ void parse_options(int argc, char **argv)
 				if (*end != '\0')
 					error(EXIT_FAILURE, 0, "Invalid argument for option -e: %s", optarg);
 				_options.embed = n;
+				break;
+			case 'O':
+				f = strtof(optarg, &end);
+				if (*end != '\0' || f < 0)
+					error(EXIT_FAILURE, 0, "Invalid argument for option -O: %s", optarg);
+				_options.alpha = f;
 				break;
 			case 'f':
 				_options.fullscreen = true;
